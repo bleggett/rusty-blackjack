@@ -1,0 +1,14 @@
+[package]
+name = "rust-blackjack"
+version = "0.1.0"
+authors = ["Ben Leggett <benjamin.leggett1@t-mobile.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rand = "0.7.3"
+
+[[bin]]
+name = "rust-blackjack"
+path = "main.rs"
