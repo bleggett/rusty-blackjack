@@ -9,15 +9,18 @@ fn main() {
     println!("Deck size {}", deck.len());
     shuffle_deck(&mut deck);
 
-    let player1 = Player {name: "Bobby".to_string(), hand: vec![deck.pop().unwrap(), deck.pop().unwrap()]};
-    let player2 = Player {name: "Jess".to_string(), hand: vec![deck.pop().unwrap(), deck.pop().unwrap()]};
-    let dealer = Player {name: "Dealer".to_string(), hand: vec![deck.pop().unwrap(), deck.pop().unwrap()]};
+    let mut player1 = Player::new("Bobby".to_string(), &mut deck);
+    let player2 = Player::new("Jess".to_string(), &mut deck);
+    let mut dealer = Player::new("Dealer".to_string(), &mut deck);
 
     println!("{}", player1);
     println!("{}", player2);
     println!("{}", dealer);
 
     dealer.check_bust();
+    player1.hit(&mut deck);
+    player1.hold();
+    println!("{}", player1);
 }
 
 
@@ -45,9 +48,16 @@ impl fmt::Display for Card {
 struct Player {
     name: String,
     hand: Vec<Card>,
+    playing: bool,
+    holding: bool,
 }
 
 impl Player {
+
+    fn new(name: String, deck: &mut Vec<Card>) -> Player {
+        Player {name, hand: vec![deck.pop().unwrap(), deck.pop().unwrap()], playing: true, holding: false}
+    }
+
     fn sum_hand(&self) -> i32 {
         let mut sum = 0;
         for card in self.hand.iter() {
@@ -57,8 +67,18 @@ impl Player {
         return sum;
     }
 
-    fn check_bust(&self) -> bool {
+    fn hit(&mut self, deck: &mut Vec<Card>) {
+        self.hand.push(deck.pop().unwrap());
+        self.check_bust();
+    }
+
+    fn hold(&mut self) {
+        self.holding = true;
+    }
+
+    fn check_bust(&mut self) -> bool {
         if self.sum_hand() > 21 {
+            self.playing = false;
             true
         } else {
             false
