@@ -2,7 +2,6 @@ use std::fmt;
 use rand::thread_rng;
 use rand::seq::SliceRandom;
 
-
 pub struct Player {
     name: String,
     hand: Vec<Card>,
@@ -94,4 +93,26 @@ pub fn populate_deck() -> Vec<Card> {
 pub fn shuffle_deck(deck: &mut Vec<Card>) {
     let mut rng = thread_rng();
     deck.shuffle(&mut rng);
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+
+    #[test]
+    fn test_populate_deck() {
+        assert_eq!(52, populate_deck().len())
+    }
+
+
+
+    #[test]
+    fn test_shuffle_deck() {
+        let mut test_deck = populate_deck();
+        shuffle_deck(&mut test_deck);
+        assert_eq!(52, test_deck.len())
+    }
+
 }
